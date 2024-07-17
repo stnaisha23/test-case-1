@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sitinuraisha.longrunningAPI.Services.SlowProcessService;
 
-import java.util.concurrent.CompletableFuture;
-
 @RestController
 @RequestMapping("/api")
 public class ProcessController {
 
     private final SlowProcessService slowProcessService;
+    private boolean processStarted = false;
 
     @Autowired
     public ProcessController(SlowProcessService slowProcessService) {
@@ -22,12 +21,16 @@ public class ProcessController {
 
     @GetMapping("/start-process")
     public String startSlowProcess() {
-        CompletableFuture<String> future = slowProcessService.runSlowProcess();
-        return "Proses dimulai. Silahkan anda bisa melanjutkan kerjaan lainnya selama proses ini berlangsung!";
+        slowProcessService.startSlowProcess();
+        processStarted = true;
+        return "Proses dimulai. Silahkan anda bisa melakukan kerjaan lainnya tanpa menunggu di sini!";
     }
 
     @GetMapping("/get-process-result")
-    public CompletableFuture<String> getProcessResult() {
-        return slowProcessService.getProcessResult();
+    public String getProcessResult() {
+        if (!processStarted) {
+            return "Proses belum dimulai. Silakan mulai proses dulu!";
+        }
+        return slowProcessService.runSlowProcess();
     }
 }
