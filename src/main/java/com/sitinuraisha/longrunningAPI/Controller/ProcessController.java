@@ -20,10 +20,10 @@ public class ProcessController {
         this.slowProcessService = slowProcessService;
     }
 
-    @GetMapping("/start-slow-process")
+    @GetMapping("/start-process")
     public String startSlowProcess() {
         CompletableFuture<String> future = slowProcessService.runSlowProcess();
-        return "Proses dimulai. Silahkan lanjutkan kerjaan lainnya selama proses ini berlangsung!";
+        return "Proses dimulai. Silahkan anda bisa melanjutkan kerjaan lainnya selama proses ini berlangsung!";
     }
 
     @GetMapping("/get-process-result")
